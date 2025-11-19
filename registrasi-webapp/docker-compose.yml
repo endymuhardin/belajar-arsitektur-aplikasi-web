@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: registrasi_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-registrasi}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ybcR55pJA0cpqTJwGAcdba4wR8fa78dy}
+      POSTGRES_DB: ${DB_DATABASE:-registrasi_db}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
