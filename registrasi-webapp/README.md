@@ -6,6 +6,7 @@ Aplikasi web sederhana yang dibuat dengan Express.js dan terhubung ke database P
 
 ```
 .
+├── migrations/         # File migrasi database
 ├── public/
 ├── src/
 │   ├── config/
@@ -67,6 +68,26 @@ Aplikasi web sederhana yang dibuat dengan Express.js dan terhubung ke database P
     
     - Pastikan server PostgreSQL Anda berjalan.
     - Buat database baru secara manual sesuai dengan nama yang Anda masukkan di file `.env` (contoh: `registrasi_db`).
+
+## Migrasi Database
+
+Proyek ini menggunakan `node-pg-migrate` untuk mengelola skema database.
+
+### Membuat Migrasi Baru
+
+Untuk membuat file migrasi baru, jalankan perintah berikut. Ganti `nama_migrasi_anda` dengan nama yang deskriptif.
+
+```bash
+npm run migrate create -- --name nama_migrasi_anda
+```
+
+### Menjalankan Migrasi
+
+Untuk menjalankan migrasi database:
+
+```bash
+npm run migrate
+```
 
 ## Menjalankan Aplikasi
 
