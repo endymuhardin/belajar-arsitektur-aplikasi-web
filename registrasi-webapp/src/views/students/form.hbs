@@ -1,0 +1,51 @@
+<div class="max-w-xl mx-auto mt-10">
+
+  {{#if error}}
+    <div class="bg-red-200 text-red-800 p-3 mb-4 rounded">{{error}}</div>
+  {{/if}}
+
+  {{#if success}}
+    <div class="bg-green-200 text-green-800 p-3 mb-4 rounded">{{success}}</div>
+  {{/if}}
+
+  <h1 class="text-2xl font-bold mb-6">Form Pendaftaran Siswa</h1>
+
+  <form method="POST" action="/students/register" class="space-y-4" novalidate>
+
+    <div>
+      <label class="block font-semibold mb-1">Nama Lengkap</label>
+      <input type="text" name="full_name" value="{{form.full_name}}" 
+        class="w-full border rounded p-2" required>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Jenis Kelamin</label>
+      <select name="gender" class="w-full border rounded p-2" required>
+        <option value="">-- pilih --</option>
+        <option value="L" {{#if (eq form.gender "L")}}selected{{/if}}>Laki-laki</option>
+        <option value="M" {{#if (eq form.gender "M")}}selected{{/if}}>Perempuan</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Tanggal Lahir</label>
+      <input type="date" name="birth_date" value="{{form.birth_date}}" 
+        class="w-full border rounded p-2">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Nomor Telepon</label>
+      <input type="text" name="phone" value="{{form.phone}}" 
+        class="w-full border rounded p-2">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Alamat</label>
+      <textarea name="address" class="w-full border rounded p-2" rows="3">{{form.address}}</textarea>
+    </div>
+
+    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Simpan
+    </button>
+  </form>
+</div>

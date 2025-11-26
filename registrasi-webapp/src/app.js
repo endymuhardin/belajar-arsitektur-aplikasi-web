@@ -1,8 +1,13 @@
 import express from 'express';
-import path from 'path';
+
 import { engine } from 'express-handlebars';
-import routes from './routes/index.js';
+import handlebars from "express-handlebars";
+
+import path from 'path';
 import { fileURLToPath } from 'url';
+
+import routes from './routes/index.js';
+import studentRoutes from "./routes/studentRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,14 +19,22 @@ app.engine('hbs', engine({
   extname: '.hbs',
   layoutsDir: path.join(__dirname, 'views/layouts'),
   defaultLayout: 'main',
+  helpers: {
+    eq: (a, b) => a === b
+  }
 }));
+
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 // public folder
 app.use(express.static(path.join(__dirname, '../public')));
 
+// untuk parsing form input
+app.use(express.urlencoded({ extended: true }));
+
 // mount routes
 app.use('/', routes);
+app.use("/", studentRoutes);
 
 export default app;
