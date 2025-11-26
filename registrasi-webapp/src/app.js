@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { engine } from 'express-handlebars';
-import handlebars from "express-handlebars";
+import dayjs from "dayjs";
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -20,7 +20,11 @@ app.engine('hbs', engine({
   layoutsDir: path.join(__dirname, 'views/layouts'),
   defaultLayout: 'main',
   helpers: {
-    eq: (a, b) => a === b
+    eq: (a, b) => a === b, 
+    formatDate(date) {
+      if (!date) return "-";
+      return dayjs(date).format("DD MMM YYYY");
+    }
   }
 }));
 

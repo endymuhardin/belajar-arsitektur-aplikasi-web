@@ -1,4 +1,4 @@
-import { createStudent } from "../models/studentModel.js";
+import { createStudent, getAllStudents } from "../models/studentModel.js";
 
 export async function showForm(req, res) {
   res.render("students/form", {
@@ -39,5 +39,15 @@ export async function submitForm(req, res) {
       title: "Form Pendaftaran Siswa",
       error: "Terjadi kesalahan server."
     });
+  }
+}
+
+export async function showStudents(req, res) {
+  try {
+    const students = await getAllStudents();
+    res.render("students/list", { students });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching students");
   }
 }

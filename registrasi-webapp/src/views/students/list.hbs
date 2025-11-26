@@ -1,0 +1,46 @@
+<div class="container mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-4">Daftar Pendaftar</h1>
+
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-slate-200">
+          <th class="border p-2">ID</th>
+          <th class="border p-2">Nama Lengkap</th>
+          <th class="border p-2">Gender</th>
+          <th class="border p-2">Tanggal Lahir</th>
+          <th class="border p-2">Telp</th>
+          <th class="border p-2">Alamat</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each students}}
+        <tr class="hover:bg-slate-100">
+          <td class="border p-2 text-center">{{this.id}}</td>
+          <td class="border p-2">{{this.full_name}}</td>
+          <td class="border p-2 text-center">{{this.gender}}</td>
+          <td class="border p-2 text-center">
+            {{#if this.birth_date}}
+              {{formatDate this.birth_date}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
+          <td class="border p-2">{{this.phone}}</td>
+          <td class="border p-2">{{this.address}}</td>
+        </tr>
+        {{/each}}
+
+        {{#if students.length}}
+        {{else}}
+        <tr>
+          <td colspan="6" class="text-center p-4 text-slate-500">
+            Belum ada data pendaftar.
+          </td>
+        </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+</div>

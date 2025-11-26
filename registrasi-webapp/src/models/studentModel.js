@@ -18,3 +18,13 @@ export async function createStudent(data) {
   const result = await pool.query(query, values);
   return result.rows[0];
 }
+
+export async function getAllStudents() {
+  const result = await pool.query(
+    `SELECT id, full_name, gender, birth_date, phone, address 
+     FROM students
+     ORDER BY id DESC`
+  );
+  return result.rows;
+}
+
