@@ -1,30 +1,54 @@
 # Aplikasi Registrasi Web
 
-Aplikasi web sederhana yang dibuat dengan Express.js, Handlebars, Tailwind CSS v4, dan terhubung ke database PostgreSQL.
+Aplikasi web untuk mengelola data pendaftaran siswa. Dibangun dengan Express.js, Handlebars, Tailwind CSS v4, dan PostgreSQL sebagai database.
+
+## Fitur Aplikasi
+
+- **Form Pendaftaran Siswa**: Input data pendaftar baru dengan validasi
+- **Daftar Pendaftar**: Menampilkan semua data pendaftar dalam bentuk tabel
+- **Styling Modern**: Menggunakan Tailwind CSS v4 untuk tampilan responsif
+- **Database Management**: Sistem migrasi database dengan node-pg-migrate
+
+## Teknologi yang Digunakan
+
+- **Backend**: Express.js v5
+- **Template Engine**: Handlebars (express-handlebars)
+- **CSS Framework**: Tailwind CSS v4
+- **Database**: PostgreSQL 17
+- **Date Handling**: Day.js
+- **Environment Variables**: dotenv
+- **Development Tools**: nodemon, concurrently
 
 ## Struktur Folder
 
 ```
 .
 ├── migrations/           # File migrasi database
+│   └── 001_skema_awal.sql
 ├── public/
 │   └── css/
 │       └── tailwind.css  # File CSS hasil generate Tailwind
 ├── src/
 │   ├── config/
 │   │   └── db.js         # Konfigurasi koneksi database
-│   ├── controllers/      # Logika bisnis (request handler)
-│   ├── models/           # Model data (interaksi database)
+│   ├── controllers/
+│   │   └── studentController.js  # Logika pendaftaran siswa
+│   ├── models/
+│   │   └── studentModel.js       # Model data siswa
 │   ├── routes/
-│   │   └── index.js      # Definisi rute aplikasi
+│   │   ├── index.js              # Route halaman utama
+│   │   └── studentRoutes.js      # Route fitur siswa
 │   ├── static-src/
-│   │   └── tailwind-input.css  # Input file untuk Tailwind CSS
+│   │   └── tailwind-input.css    # Input file untuk Tailwind CSS
 │   ├── views/            # Template Handlebars
 │   │   ├── layouts/
-│   │   │   └── main.hbs  # Layout utama
+│   │   │   └── main.hbs          # Layout utama
 │   │   ├── partials/
-│   │   │   └── navbar.hbs # Komponen navbar
-│   │   └── home.hbs      # Halaman home
+│   │   │   └── navbar.hbs        # Komponen navbar
+│   │   ├── students/
+│   │   │   ├── form.hbs          # Form pendaftaran
+│   │   │   └── list.hbs          # Daftar pendaftar
+│   │   └── home.hbs              # Halaman home
 │   └── app.js            # Konfigurasi Express app
 ├── .env.example          # Contoh file environment variables
 ├── .gitignore            # File dan folder yang diabaikan Git
@@ -57,11 +81,20 @@ Aplikasi web sederhana yang dibuat dengan Express.js, Handlebars, Tailwind CSS v
 
 3.  **Konfigurasi Environment Variables:**
 
-    - Salin file `.env.example` menjadi `.env`.
-      ```bash
-      cp .env.example .env
-      ```
-    - Buka file `.env`. Jika Anda menggunakan Docker, konfigurasi default seharusnya sudah sesuai. Jika Anda menggunakan instalasi PostgreSQL lokal, sesuaikan dengan konfigurasi Anda.
+    Salin file `.env.example` menjadi `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+    
+    Isi file `.env` (konfigurasi default sudah sesuai dengan Docker setup):
+    ```env
+    PORT=3000
+    DB_USER=postgres
+    DB_HOST=localhost
+    DB_DATABASE=registrasi_db
+    DB_PASSWORD=password
+    DB_PORT=5432
+    ```
 
 4.  **Setup Database (Pilih salah satu)**
 
@@ -82,22 +115,26 @@ Aplikasi web sederhana yang dibuat dengan Express.js, Handlebars, Tailwind CSS v
 
 ## Migrasi Database
 
-Proyek ini menggunakan `node-pg-migrate` untuk mengelola skema database.
-
-### Membuat Migrasi Baru
-
-Untuk membuat file migrasi baru, jalankan perintah berikut. Ganti `nama_migrasi_anda` dengan nama yang deskriptif.
-
-```bash
-npm run migrate create -- --name nama_migrasi_anda
-```
+Proyek ini sudah menyertakan file migrasi `001_skema_awal.sql` yang akan membuat tabel `students` dengan struktur:
+- `id` (BIGSERIAL PRIMARY KEY)
+- `full_name` (VARCHAR 150) - Nama lengkap siswa
+- `gender` (CHAR 1) - Jenis kelamin (L/M)
+- `birth_date` (DATE) - Tanggal lahir
+- `phone` (VARCHAR 20) - Nomor telepon
+- `address` (TEXT) - Alamat lengkap
 
 ### Menjalankan Migrasi
 
-Untuk menjalankan migrasi database:
+Setelah database berjalan, jalankan migrasi untuk membuat tabel:
 
 ```bash
-npm run migrate
+npx node-pg-migrate up
+```
+
+Untuk rollback migrasi:
+
+```bash
+npx node-pg-migrate down
 ```
 
 ## Tailwind CSS
@@ -155,6 +192,70 @@ npx concurrently "npm run dev:css" "npm run dev"
    npm start
    ```
 
-## Halaman
+## Penggunaan Aplikasi
 
-- `GET /`: Halaman utama aplikasi dengan Tailwind CSS styling
+Setelah aplikasi berjalan, buka browser dan akses `http://localhost:3000`.
+
+### Halaman dan Fitur
+
+#### 1. Halaman Utama (`/`)
+- Landing page aplikasi
+- Menampilkan navigasi ke fitur-fitur aplikasi
+
+#### 2. Form Pendaftaran Siswa (`/students/register`)
+Fitur untuk mendaftarkan siswa baru dengan mengisi:
+- **Nama Lengkap** (wajib diisi)
+- **Jenis Kelamin** (wajib diisi): Pilih Laki-laki (L) atau Perempuan (M)
+- **Tanggal Lahir** (opsional): Format date picker
+- **Nomor Telepon** (opsional)
+- **Alamat** (opsional): Text area untuk alamat lengkap
+
+**Cara Menggunakan:**
+1. Akses halaman `/students/register`
+2. Isi form dengan data siswa
+3. Klik tombol "Simpan"
+4. Sistem akan menampilkan pesan sukses jika data berhasil disimpan
+5. Jika ada error validasi (nama atau gender kosong), akan muncul pesan error
+
+**Validasi:**
+- Nama lengkap dan jenis kelamin wajib diisi
+- Jika validasi gagal, form akan menampilkan error dan data yang sudah diisi tetap ada
+
+#### 3. Daftar Pendaftar (`/students/list`)
+Menampilkan semua data siswa yang sudah terdaftar dalam bentuk tabel dengan kolom:
+- ID
+- Nama Lengkap
+- Gender (L/M)
+- Tanggal Lahir (format Indonesia dengan Day.js)
+- Nomor Telepon
+- Alamat
+
+**Fitur:**
+- Tabel responsif dengan hover effect
+- Jika belum ada data, akan menampilkan pesan "Belum ada data pendaftar"
+- Tanggal lahir diformat otomatis menggunakan helper Handlebars
+
+## Endpoint API
+
+| Method | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| GET | `/` | Halaman utama |
+| GET | `/students/register` | Menampilkan form pendaftaran |
+| POST | `/students/register` | Menyimpan data pendaftar baru |
+| GET | `/students/list` | Menampilkan daftar semua pendaftar |
+
+## Tips Pengembangan
+
+1. **Hot Reload CSS**: Gunakan `npm run dev:css` di terminal terpisah saat development agar perubahan CSS langsung terlihat
+
+2. **Database Management**: 
+   - Gunakan `docker-compose down` untuk menghentikan database
+   - Data tersimpan di folder `db-registrasi/` dan akan tetap ada meskipun container dihapus
+
+3. **Debugging**: 
+   - Error akan ditampilkan di console terminal
+   - Browser console juga menampilkan error JavaScript jika ada
+
+4. **Testing Form**:
+   - Coba submit form tanpa mengisi field wajib untuk melihat validasi
+   - Test dengan berbagai input untuk memastikan data tersimpan dengan benar
