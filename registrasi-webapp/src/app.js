@@ -1,6 +1,7 @@
 import express from 'express';
-import { engine } from 'express-handlebars';
 import path from 'path';
+import { engine } from 'express-handlebars';
+import routes from './routes/index.js';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -8,23 +9,19 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Setup Handlebars
+// setup handlebars
 app.engine('hbs', engine({
   extname: '.hbs',
-  defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views/layouts'),
-  partialsDir: path.join(__dirname, 'views/partials')
+  defaultLayout: 'main',
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Static files
+// public folder
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Routes
-app.get('/', (req, res) => {
-  res.render('home', { title: "Home Page" });
-});
+// mount routes
+app.use('/', routes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running → http://localhost:${PORT}`));
+export default app;

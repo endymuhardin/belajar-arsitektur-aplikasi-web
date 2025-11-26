@@ -5,4 +5,7 @@
 .env
 
 # Docker
-/postgres_data
+db-registrasi
+
+# Konfig personal, jangan dicommit
+.vscode
