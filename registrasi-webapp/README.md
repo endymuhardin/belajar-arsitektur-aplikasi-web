@@ -1,23 +1,34 @@
 # Aplikasi Registrasi Web
 
-Aplikasi web sederhana yang dibuat dengan Express.js dan terhubung ke database PostgreSQL.
+Aplikasi web sederhana yang dibuat dengan Express.js, Handlebars, Tailwind CSS v4, dan terhubung ke database PostgreSQL.
 
 ## Struktur Folder
 
 ```
 .
-├── migrations/         # File migrasi database
+├── migrations/           # File migrasi database
 ├── public/
+│   └── css/
+│       └── tailwind.css  # File CSS hasil generate Tailwind
 ├── src/
 │   ├── config/
 │   │   └── db.js         # Konfigurasi koneksi database
 │   ├── controllers/      # Logika bisnis (request handler)
 │   ├── models/           # Model data (interaksi database)
 │   ├── routes/
-│   │   └── index.js      # Definisi rute API
-│   └── views/            # Halaman/template (jika menggunakan view engine)
+│   │   └── index.js      # Definisi rute aplikasi
+│   ├── static-src/
+│   │   └── tailwind-input.css  # Input file untuk Tailwind CSS
+│   ├── views/            # Template Handlebars
+│   │   ├── layouts/
+│   │   │   └── main.hbs  # Layout utama
+│   │   ├── partials/
+│   │   │   └── navbar.hbs # Komponen navbar
+│   │   └── home.hbs      # Halaman home
+│   └── app.js            # Konfigurasi Express app
 ├── .env.example          # Contoh file environment variables
 ├── .gitignore            # File dan folder yang diabaikan Git
+├── docker-compose.yml    # Konfigurasi Docker untuk PostgreSQL
 ├── index.js              # File utama aplikasi
 ├── package.json          # Informasi proyek dan dependensi
 └── README.md             # Dokumentasi proyek
@@ -89,25 +100,61 @@ Untuk menjalankan migrasi database:
 npm run migrate
 ```
 
+## Tailwind CSS
+
+Proyek ini menggunakan **Tailwind CSS v4** dengan konfigurasi baru yang lebih sederhana.
+
+### Build CSS untuk Produksi
+
+```bash
+npm run build:css
+```
+
+### Watch Mode untuk Development
+
+Untuk otomatis rebuild CSS saat ada perubahan:
+
+```bash
+npm run dev:css
+```
+
+**Catatan:** Tailwind v4 tidak lagi memerlukan `tailwind.config.js` atau `postcss.config.js`. Konfigurasi dilakukan langsung di file `src/static-src/tailwind-input.css` menggunakan directive `@source`.
+
 ## Menjalankan Aplikasi
 
 ### Mode Pengembangan (Development)
 
 Mode ini menggunakan `nodemon` yang akan secara otomatis me-restart server setiap kali ada perubahan pada file.
 
+**Terminal 1 - Build CSS (watch mode):**
+```bash
+npm run dev:css
+```
+
+**Terminal 2 - Jalankan server:**
 ```bash
 npm run dev
 ```
 
 Aplikasi akan berjalan di `http://localhost:3000`.
 
-### Mode Produksi (Production)
-
+**Tips:** Gunakan `concurrently` untuk menjalankan kedua perintah sekaligus dalam satu terminal:
 ```bash
-npm start
+npx concurrently "npm run dev:css" "npm run dev"
 ```
 
-## Endpoint API
+### Mode Produksi (Production)
 
-- `GET /`: Menampilkan pesan selamat datang.
-- `GET /test-db`: Menguji koneksi ke database dan mengembalikan waktu server database saat ini.
+1. Build CSS terlebih dahulu:
+   ```bash
+   npm run build:css
+   ```
+
+2. Jalankan aplikasi:
+   ```bash
+   npm start
+   ```
+
+## Halaman
+
+- `GET /`: Halaman utama aplikasi dengan Tailwind CSS styling
